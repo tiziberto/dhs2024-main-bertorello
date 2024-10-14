@@ -19,6 +19,14 @@ MOD   : '%' ;
 ASIG  : '=' ;
 IGUAL : '==' ;
 
+MIN : '<' ;
+MINEQ : '<=' ;
+MAY : '>' ;
+MAYEQ : '>=';
+AND : '&&' ; 
+OR : '||' ;
+NOT : '!=' ;
+
 NUMERO : DIGITO+ ;
 
 INT   : 'int' ;
