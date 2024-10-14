@@ -10,6 +10,7 @@ PC  : ')' ;
 LLA : '{' ;
 LLC : '}' ;
 PYC : ';' ;
+COMA : ',';
 SUMA  : '+' ;
 RESTA : '-' ;
 MULT  : '*' ;
@@ -30,6 +31,11 @@ NOT : '!=' ;
 NUMERO : DIGITO+ ;
 
 INT   : 'int' ;
+FLOAT : 'float';
+BOOLEAN : 'bool';
+DOUBLE : 'double';
+CHAR : 'char';
+VOID : 'void';
 WHILE : 'while' ;
 FOR   : 'for' ;
 IF    : 'if' ;
@@ -67,11 +73,28 @@ instruccion : declaracion
             | asignacion PYC
             ;
 
-declaracion : INT ID PYC ;
+tipodatofuncion:INT
+              | DOUBLE
+              | FLOAT
+              | BOOLEAN
+              | CHAR
+              | VOID
+              ;
+
+tipodato: INT
+        | DOUBLE
+        | FLOAT
+        | BOOLEAN
+        | CHAR
+        ;
+
+
+declaracion : tipodato ID PYC;
 
 asignacion : ID ASIG opal ;
 
 opal : exp ; // completar
+
 
 exp : term e ;
 e   : SUMA  term e
@@ -94,6 +117,15 @@ factor : NUMERO
 iwhile : WHILE PA ID PC instruccion ;
 
 bloque : LLA instrucciones LLC ;
+
+prototipofunc: tipodatofuncion ID PA argumentos PC PYC;
+
+func: prototipofunc bloque;
+
+argumentos: tipodato ID COMA argumentos
+          | tipodato ID
+          |
+          ;
 
 // ifor : FOR PA init PYC cond PYC iter PC instruccion ;
 // init : ;
