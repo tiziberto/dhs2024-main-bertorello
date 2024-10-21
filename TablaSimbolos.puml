@@ -17,7 +17,7 @@ class Contexto {
 }
 
 abstract class ID <<abstract>> {
-    - String nombregithub
+    - String nombre
     - Enum tipoDato
     - Boolean inicializado
     - Boolean usado

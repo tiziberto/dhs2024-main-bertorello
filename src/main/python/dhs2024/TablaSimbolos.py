@@ -2,8 +2,8 @@ from Contexto import Contexto
 
 class TablaSimbolos():
     def __init__(self):
-        self.contextos = list()
-        self.contexto = Contexto ('global', None)
+        self.contextos = []
+        self.contexto = Contexto ()
         self.contextos.append(self.contexto) 
 
 
