@@ -6,8 +6,14 @@ class TablaSimbolos():
         self.contexto = Contexto ()
         self.contextos.append(self.contexto) 
 
+    #def addContexto():
 
-tabla = TablaSimbolos
-print(tabla.__getattribute__('contexto').__getattribute__('tabla'))
+    #def delContexto():
 
-# def delContexto():
+    #def addIdentificador():
+
+    #def buscarLocal():
+
+    #def buscarGlobal():
+        
+    

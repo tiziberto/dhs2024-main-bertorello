@@ -1,4 +1,4 @@
-from ID import Funcion, Variable, TipoDatoFuncion, TipoDatoVariable, ID
+from ID import Funcion, Variable, TipoDatoFunc, TipoDatoVar, ID
 
 class Contexto():
     #funcion1 = Funcion('func' , TipoDatoFuncion.INT.name, True , True, [1,2,3])
