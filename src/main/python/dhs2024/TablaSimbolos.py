@@ -1,19 +1,27 @@
 from Contexto import Contexto
+from ID import ID
 
-class TablaSimbolos():
+class TablaSimbolos(object):
+    __instance= None
+    contextos = []
+
     def __init__(self):
-        self.contextos = []
-        self.contexto = Contexto ()
+        contextoGlobal = Contexto ()
         self.contextos.append(self.contexto) 
 
-    #def addContexto():
+    def addContexto(self, contexto):
+        Contexto.tabla.append(contexto)
 
-    #def delContexto():
+    def delContexto(self):
+        if self.stack.__len__() >= 1:
+            return self.stack.pop()
+        else: return ("No hay contextos en la tabla")
 
-    #def addIdentificador():
+    def addIdentificador(self, nombre, tipodeDato):
+        contexto=self.contextos[-1]
+        id=ID(nombre,tipodeDato,False,False)
+        contexto.tabla.update({nombre:id})
 
-    #def buscarLocal():
+    #def buscarLocal(self):
 
-    #def buscarGlobal():
-        
-    
+    #def buscarGlobal(self):
