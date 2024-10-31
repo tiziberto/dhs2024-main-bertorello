@@ -5,7 +5,7 @@
 
 ---
 
-## Resumen
+## Resumen del proyecto
 
 Este proyecto tiene como objetivo implementar el análisis léxico, sintáctico y semántico de una versión reducida del lenguaje C. El programa tomará un archivo de código fuente y generará un árbol sintáctico (usando ANTLR), así como una tabla de símbolos y un reporte de errores. Se buscará identificar y reportar errores léxicos, sintácticos y semánticos presentes en el código.
 

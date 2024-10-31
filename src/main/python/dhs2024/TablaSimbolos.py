@@ -5,6 +5,11 @@ class TablaSimbolos(object):
     __instance= None
     contextos = []
 
+    def __new__(cls):
+        if TablaSimbolos.__instance is None:
+            TablaSimbolos.__instance = object.__new__(cls)
+        return TablaSimbolos.__instance
+
     def __init__(self):
         contextoGlobal = Contexto ()
         self.contextos.append(self.contexto) 
@@ -22,6 +27,18 @@ class TablaSimbolos(object):
         id=ID(nombre,tipodeDato,False,False)
         contexto.tabla.update({nombre:id})
 
-    #def buscarLocal(self):
+    def buscarLocal(self, nombre):
+        resultadodeBusqueda = self.contextos[-1].traerVariable(nombre)
+        if (resultadodeBusqueda) == None:
+            print("No hay resultados")
+            return 1
+        else: 
+            return resultadodeBusqueda
 
-    #def buscarGlobal(self):
+    def buscarGlobal(self, nombre):
+        resultadodeBusqueda = self.contextos[0].traerVariable(nombre)
+        if (resultadodeBusqueda) == None:
+            print("No hay resultados")
+            return 1
+        else: 
+            return resultadodeBusqueda
