@@ -19,14 +19,14 @@ MOD   : '%' ;
 
 ASIG  : '=' ;
 IGUAL : '==' ;
-
+DISTINTO : '!=';
 MIN : '<' ;
 MINEQ : '<=' ;
 MAY : '>' ;
 MAYEQ : '>=';
 AND : '&&' ; 
 OR : '||' ;
-NOT : '!=' ;
+NOT : '!' ;
 
 NUMERO : DIGITO+ ;
 
@@ -35,22 +35,26 @@ FLOAT : 'float';
 BOOLEAN : 'bool';
 DOUBLE : 'double';
 CHAR : 'char';
+STRING : 'String';
 VOID : 'void';
 WHILE : 'while' ;
 FOR   : 'for' ;
 IF    : 'if' ;
+RETURN : 'return';
+ELSE : 'else';
 
 ID : (LETRA | '_')(LETRA | DIGITO | '_')* ;
 
-WS : [ \t\n\r] -> skip;
-// OTRO : . ;
+// Espacios en blanco
+  WS : [ \t\n\r] -> skip;
+  OTRO : . ;
 
-// s : ID     {print("ID ->" + $ID.text + "<--") }         s
-//   | NUMERO {print("NUMERO ->" + $NUMERO.text + "<--") } s
-//   | WHILE  {print("WHILE ->" + $WHILE.text + "<--") }   s
-  // | OTRO   {print("Otro ->" + $OTRO.text + "<--") }     s
-  // | EOF
-  // ;
+  s : ID     {print("ID ->" + $ID.text + "<--") }         s
+     | NUMERO {print("NUMERO ->" + $NUMERO.text + "<--") } s
+     | WHILE  {print("WHILE ->" + $WHILE.text + "<--") }   s
+     | OTRO   {print("Otro ->" + $OTRO.text + "<--") }     s
+     | EOF
+     ;
 
 // si : s EOF ;
 
@@ -67,10 +71,13 @@ instrucciones : instruccion instrucciones
 // instruccion : INST {print($INST.text[:-1])};
 instruccion : declaracion
             | iwhile
-            // | ifor
-            // | iif
+            | ifor
+            | iif
             | bloque
             | asignacion PYC
+            | func
+            | return PYC
+            | prototipofunc
             ;
 
 tipodatofuncion:INT
@@ -91,9 +98,9 @@ tipodato: INT
 
 declaracion : tipodato ID PYC;
 
-asignacion : ID ASIG opal ;
+asignacion : ID ASIG opal PYC;
 
-opal : exp ; // completar
+opal : exp ;
 
 
 exp : term e ;
@@ -114,9 +121,40 @@ factor : NUMERO
        | PA exp PC
        ;
 
-iwhile : WHILE PA ID PC instruccion ;
+iwhile : WHILE PA ID PC bloque ;
+
+ifor : FOR PA asignacion PYC opal PYC asignacion PC instrucciones;
+
+iif :  IF PA PC bloque
+    |  IF PA PC bloque else
+    ;
+
+else : ELSE bloque
+     | ELSE iif
+     |
+     ;
+
+return : RETURN opal;
 
 bloque : LLA instrucciones LLC ;
+
+operador: DISTINTO 
+        | IGUAL
+        | MAY
+        | MAYEQ
+        | MINEQ
+        | MIN
+        ;
+
+condicionales : '=='
+              | '<'
+              | '>'
+              | '<='
+              | '>='
+              ;
+
+iter : ID e;
+
 
 prototipofunc: tipodatofuncion ID PA argumentos PC PYC;
 
