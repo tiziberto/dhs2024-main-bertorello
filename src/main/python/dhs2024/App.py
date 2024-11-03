@@ -9,7 +9,8 @@ def main(argv):
     # archivo = "input/entrada.txt"
     # archivo = "input/parentesis.txt"
     # archivo = "input/programa.txt"
-    archivo = "input/opal.txt"
+    # archivo = "input/opal.txt"
+    archivo = "input/test.txt"
     if len(argv) > 1 :
         archivo = argv[1]
     input = FileStream(archivo)
@@ -19,7 +20,7 @@ def main(argv):
     escucha = Escucha()
     parser.addParseListener(escucha)
     tree = parser.programa()
-    # print(tree.toStringTree(recog=parser))
+    # print(tree.toStringTree(recog=parser)
     caminante = Walker()
     caminante.visitPrograma(tree)
     

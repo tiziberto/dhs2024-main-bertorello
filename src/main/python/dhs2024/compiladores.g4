@@ -62,23 +62,9 @@ ID : (LETRA | '_')(LETRA | DIGITO | '_')* ;
 //   |
 //   ;
 
-programa : instrucciones EOF ;
-
-instrucciones : instruccion instrucciones
-              |
-              ;
+programa : (func | declaracion)* EOF ;
 
 // instruccion : INST {print($INST.text[:-1])};
-instruccion : declaracion
-            | iwhile
-            | ifor
-            | iif
-            | bloque
-            | asignacion PYC
-            | func
-            | return PYC
-            | prototipofunc
-            ;
 
 tipodatofuncion:INT
               | DOUBLE
@@ -96,20 +82,56 @@ tipodato: INT
         ;
 
 
-declaracion : tipodato ID PYC;
+declaracion : tipodato listaDeclaraciones PYC ;
 
-asignacion : ID ASIG opal PYC;
+listaDeclaraciones 
+    : ID (ASIG opal)? (COMA ID (ASIG opal)?)* ;
+
+instruccion : declaracion
+            | iwhile
+            | ifor
+            | iif
+            | bloque
+            | asignacion PYC
+            | func
+            | return PYC
+            | prototipofunc
+            | puntoYComa
+            ;
+
+puntoYComa : declaracion (PYC|)
+            |asignacion (PYC|)
+            |prototipofunc (PYC|)
+            |return (PYC|)
+            |llamadaFunc (PYC|)
+            |incremento (PYC|)
+            |decremento (PYC|)
+            ;
+
+instrucciones : instruccion*;
+
+asignacion : ID ASIG opal PYC
+           | ID ASIG llamadaFunc PYC;
+
+llamadaFunc : ID PA listaExp PC ; 
+
+
+listaExp : (exp (COMA exp)*)? ;
+
 
 opal : exp ;
 
 
 exp : term e ;
+
 e   : SUMA  term e
     | RESTA term e
     |
     ;
 
+
 term : factor t ;
+
 t    : MULT factor t
      | DIV  factor t
      | MOD  factor t
@@ -121,7 +143,9 @@ factor : NUMERO
        | PA exp PC
        ;
 
-iwhile : WHILE PA ID PC bloque ;
+iwhile : WHILE PA exp PC bloque
+       | WHILE PA exp operador exp PC bloque
+       ;
 
 ifor : FOR PA asignacion PYC opal PYC asignacion PC instrucciones;
 
@@ -158,16 +182,12 @@ iter : ID e;
 
 prototipofunc: tipodatofuncion ID PA argumentos PC PYC;
 
-func: prototipofunc bloque;
+func : tipodatofuncion ID PA argumentos PC bloque ;
 
 argumentos: tipodato ID COMA argumentos
           | tipodato ID
           |
           ;
 
-// ifor : FOR PA init PYC cond PYC iter PC instruccion ;
-// init : ;
-// cond : ;
-// iter : ;
-
-
+incremento: ID SUMA SUMA;
+decremento: ID RESTA RESTA;
