@@ -62,7 +62,7 @@ ID : (LETRA | '_')(LETRA | DIGITO | '_')* ;
 //   |
 //   ;
 
-programa : (func | declaracion)* EOF ;
+programa : instrucciones EOF ;
 
 // instruccion : INST {print($INST.text[:-1])};
 
@@ -82,44 +82,39 @@ tipodato: INT
         ;
 
 
-declaracion : tipodato listaDeclaraciones PYC ;
+declaracion : tipodato ID (COMA ID)*;
 
-listaDeclaraciones 
-    : ID (ASIG opal)? (COMA ID (ASIG opal)?)* ;
+//listaDeclaraciones 
+//    : ID (ASIG opal)? (COMA ID (ASIG opal)?)* ;
 
-instruccion : declaracion
+instruccion : declaracion PYC
             | iwhile
             | ifor
             | iif
             | bloque
             | asignacion PYC
             | func
-            | return PYC
+            | return_call PYC
             | prototipofunc
-            | puntoYComa
+            | llamadaFunc PYC
             ;
 
-puntoYComa : declaracion (PYC|)
-            |asignacion (PYC|)
-            |prototipofunc (PYC|)
-            |return (PYC|)
-            |llamadaFunc (PYC|)
-            |incremento (PYC|)
-            |decremento (PYC|)
-            ;
+instrucciones : instruccion (instrucciones)*
+              ;
 
-instrucciones : instruccion*;
-
-asignacion : ID ASIG opal PYC
-           | ID ASIG llamadaFunc PYC;
+asignacion : ID ASIG opal
+           | ID ASIG llamadaFunc
+           ;
 
 llamadaFunc : ID PA listaExp PC ; 
+listaExp : opal lista_parametros;
+lista_parametros : COMA opal lista_parametros;
 
 
-listaExp : (exp (COMA exp)*)? ;
 
-
-opal : exp ;
+opal : exp 
+     | exp operador exp
+     ;
 
 
 exp : term e ;
@@ -143,14 +138,19 @@ factor : NUMERO
        | PA exp PC
        ;
 
-iwhile : WHILE PA exp PC bloque
-       | WHILE PA exp operador exp PC bloque
+iwhile : WHILE PA opal PC bloque
        ;
 
-ifor : FOR PA asignacion PYC opal PYC asignacion PC instrucciones;
+ifor : FOR PA init PYC opal PYC iteracion PC bloque;
 
-iif :  IF PA PC bloque
-    |  IF PA PC bloque else
+init: ID ASIG NUMERO;
+iteracion: asignacion
+         | incremento
+         | decremento
+         ;
+
+iif :  IF PA opal PC bloque
+    |  IF PA opal PC bloque else
     ;
 
 else : ELSE bloque
@@ -158,7 +158,7 @@ else : ELSE bloque
      |
      ;
 
-return : RETURN opal;
+return_call : RETURN opal;
 
 bloque : LLA instrucciones LLC ;
 
@@ -189,5 +189,9 @@ argumentos: tipodato ID COMA argumentos
           |
           ;
 
-incremento: ID SUMA SUMA;
-decremento: ID RESTA RESTA;
+incremento: ID SUMA SUMA
+          | SUMA SUMA ID
+          ;
+decremento: ID RESTA RESTA
+          | RESTA RESTA ID
+          ;

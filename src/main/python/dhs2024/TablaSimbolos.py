@@ -22,10 +22,13 @@ class TablaSimbolos(object):
 
     def addIdentificador(self, nombre, tipodeDato):
         contexto=self.contextos[-1]
-        id=ID(nombre,tipodeDato,False,False)
-        self.contextos.append({nombre:id})
+        id=ID(nombre,tipodeDato,True,False,False)
+        contexto.tabla.update({nombre:id})
+
+
 
     def buscarLocal(self, nombre):
+        print("PRUEBA BUSCAR LOCAL")
         resultadodeBusqueda = self.contextos[-1].traerVariable(nombre)
         if (resultadodeBusqueda) == None:
             print("No hay resultados")
@@ -34,9 +37,11 @@ class TablaSimbolos(object):
             return resultadodeBusqueda
 
     def buscarGlobal(self, nombre):
-        resultadodeBusqueda = self.contextos[0].traerVariable(nombre)
-        if (resultadodeBusqueda) == None:
+        print("PRUEBA BUSCAR GLOBAL")
+        if (self.contextos[0].traerVariable(nombre)) == None:
             print("No hay resultados")
-            return 1
+            return None
         else: 
-            return resultadodeBusqueda
+            resultado = self.contextos[0].traerVariable(nombre)
+            print("Hay resultados")
+            return resultado

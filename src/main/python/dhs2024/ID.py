@@ -9,17 +9,11 @@ class TipoDatoFunc(Enum):
     DOUBLE = 'double'
     CHAR = 'char'
 
-class TipoDatoVar(Enum):
-    INT = 'int'
-    FLOAT = 'float'
-    BOOLEAN = 'bool' 
-    DOUBLE = 'double'
-    CHAR = 'char'
-
 class ID():
-    def __init__(self, nombre, tipoDato: Union[TipoDatoVar, TipoDatoFunc], inicializado = False, usado = False):
+    def __init__(self, nombre, tipoDato, declarado = False, inicializado = False, usado = False):
         self.nombre = nombre
-        self.tipoDato = tipoDato
+        self.tipoDato = TipoDatoFunc(tipoDato)
+        self.declarado = declarado
         self.inicializado = inicializado
         self.usado = usado
 
@@ -40,12 +34,14 @@ class Funcion(ID):
     
 
 class Variable(ID):
-    def __init__(self, nombre, tipoDato: TipoDatoVar, inicializado, usado):
-        super()._init_(nombre, tipoDato, inicializado, usado)
+    def __init__(self, nombre, tipoDato, declarado, inicializado, usado):
+        super()._init_(nombre, tipoDato, declarado, inicializado, usado)
+
+    def marcar_declarada (self):
+        marcar_declarada = True
 
     def marcar_inicializada (self):
         marcar_inicializada = True
 
-    
     def marcar_usada (self):
         marcar_usada = True

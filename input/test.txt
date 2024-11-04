@@ -1,15 +1,1 @@
-int main () {
-    int x = 0;
-    int a = 0, b, c = 0;
-
-    y = funcion(x, 6);
-    while (y > 0) {
-        int x = 0;
-        y = y - 1;
-        {
-            int x = 0;
-        }
-    }
-
-    return 0;
-}
+int x,y;
