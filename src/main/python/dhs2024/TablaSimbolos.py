@@ -28,20 +28,42 @@ class TablaSimbolos(object):
 
 
     def buscarLocal(self, nombre):
-        print("PRUEBA BUSCAR LOCAL")
+        #print("PRUEBA BUSCAR LOCAL")
         resultadodeBusqueda = self.contextos[-1].traerVariable(nombre)
-        if (resultadodeBusqueda) == None:
-            print("No hay resultados")
-            return 1
+        if resultadodeBusqueda == None:
+            #print("No hay resultados")
+            return None
         else: 
             return resultadodeBusqueda
 
     def buscarGlobal(self, nombre):
-        print("PRUEBA BUSCAR GLOBAL")
-        if (self.contextos[0].traerVariable(nombre)) == None:
-            print("No hay resultados")
+        #print("PRUEBA BUSCAR GLOBAL")
+        resultadodeBusqueda = self.contextos[0].traerVariable(nombre)
+        if resultadodeBusqueda == None:
+            #print("No hay resultados")
             return None
         else: 
-            resultado = self.contextos[0].traerVariable(nombre)
-            print("Hay resultados")
-            return resultado
+            #print("Hay resultados")
+            return resultadodeBusqueda
+        
+    def controlarVarUsadas (self):
+        noUsadas = []
+        noInicializadas = []
+
+        contexto = self.contextos[-1]
+        for nombre, id in contexto.tabla.items():
+            print('VAR: '+nombre+'\tUsado: '+str(id.usado)+'\tInicializado: '+str(id.inicializado))
+            if id.usado == False:
+                noUsadas.append(nombre)
+            if id.inicializado == False:
+                noInicializadas.append(nombre)
+        
+        print('---------VARIABLES NO USADAS:---------')
+        for i in noUsadas:
+            print(i+'\n')
+        print('---------VARIABLES NO INICIALIZADAS:---------')
+        for i in noInicializadas:
+            print(i+'\n')
+        
+
+        

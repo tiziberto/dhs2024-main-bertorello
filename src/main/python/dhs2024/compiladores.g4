@@ -182,7 +182,15 @@ iter : ID e;
 
 prototipofunc: tipodatofuncion ID PA argumentos PC PYC;
 
-func : tipodatofuncion ID PA argumentos PC bloque ;
+func :  usoFunc bloque ;
+
+parFunc : tipodatofuncion ID (COMA tipodato ID)* ;
+
+usoFunc :
+            tipodatofuncion ID PA (parFunc)? PC // int x (int y, int z) Tambien acepta int x (int y)
+           | VOID ID PA PC
+           | VOID ID PA parFunc PC
+           ; 
 
 argumentos: tipodato ID COMA argumentos
           | tipodato ID

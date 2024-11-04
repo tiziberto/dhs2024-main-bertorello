@@ -8,9 +8,9 @@ class Contexto():
 
     def traerVariable(self, nombre):
         if nombre in self.tabla:
-            print("Enviando contexto>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+            #print("Enviando contexto>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
             return self.tabla[nombre]
         else:
-            print("SIN contexto>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+            #print("SIN contexto>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
             return None
         
