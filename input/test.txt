@@ -1,2 +1,8 @@
-int y;
-y = 1;
+
+void sumar (int a);
+
+void sumar (int a)
+{
+    a = 2;
+
+}

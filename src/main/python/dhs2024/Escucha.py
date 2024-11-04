@@ -22,6 +22,8 @@ class Escucha (compiladoresListener) :
         print("Se encontraron")
         print("\tNodos:  " + str(self.numNodos)) 
         print("\tTokens: " + str(self.numTokens))
+        self.tablasimbolos.controlarVarUsadas()
+
 
     #WHILE:
 
@@ -88,7 +90,7 @@ class Escucha (compiladoresListener) :
     #TOKENS
 
     def visitTerminal(self, node: TerminalNode):
-        print(" ---> Token: " + node.getText())
+        #print(" ---> Token: " + node.getText())
         self.numTokens += 1
     
     #ERRORES
@@ -188,63 +190,34 @@ class Escucha (compiladoresListener) :
 
         varLocal = self.tablasimbolos.buscarLocal(nombreVar)
         varGlobal = self.tablasimbolos.buscarGlobal(nombreVar)
-        tipoDatoIzquierda = None
-        tipoDatoDerecha = None
 
         if varLocal is not None: 
             print('La variable '+nombreVar+' existe (LOCAL)')
-            tipoDatoIzquierda = varLocal.tipoDato
             varLocal.inicializado = 1 
-            print(varLocal.inicializado)
         elif varGlobal is not None:
             print('La variable '+nombreVar+' existe (GLOBAL)' )
-            tipoDatoIzquierda = varGlobal.tipoDato
             varGlobal.inicializado = 1 
         else:
             print('-----ERROR SEMANTICO: La variable '+ nombreVar + ' no fue declarada-----')
 
-        nombreVarUsada = ctx.getChild(2).getText()
-        partes = re.split("[+\-*]", nombreVarUsada)
+
+        VariableUsada = ctx.getChild(2).getText()
+        partes = re.split("[+\-*]",VariableUsada)
         for i in partes:
-            if i.isdigit():
-                print(str(tipoDatoIzquierda))
-                tipoDatoDerecha = 'tipodatofuncion.INT'
-                if tipoDatoDerecha != str(tipoDatoIzquierda):
-                    if str(tipoDatoIzquierda) != 'tipodatofuncion.FLOAT':
-                        print('-----ERROR SEMANTICO: Formato de variable no compatible-----')
-                        if varGlobal is not None:
-                            varGlobal.inicializado=0
-                        elif varLocal is not None:
-                            varLocal.inicializado=0
-            else:
-                varUsadaGlobal = self.tablasimbolos.buscarGlobal(i)
-                varUsadaLocal = self.tablasimbolos.buscarLocal(i)
-
-                if varUsadaLocal is not None:
-                    if varUsadaLocal.inicializado == 1:
-                        varUsadaLocal.usado = 1
-                        tipoDatoDerecha = varUsadaLocal.tipoDato
-                    else:
-                        tipoDatoDerecha = varUsadaLocal.tipoDato
-                        print('-----ERROR SEMANTICO: La variable '+i+' no fue inicializada-----')
-                elif varUsadaGlobal is not None:
-                    if varUsadaGlobal.inicializado == 1:
-                        varUsadaGlobal.usado = 1
-                        tipoDatoDerecha = varUsadaGlobal.tipoDato
-                    else:
-                        tipoDatoDerecha = varUsadaGlobal.tipoDato
-                        print('-----ERROR SEMANTICO: La variable: '+i+' no fue inicializada-----')
-                if tipoDatoDerecha != tipoDatoIzquierda:
-                    if varUsadaGlobal is not None:
-                        varUsadaGlobal.usado = 0
-                        varGlobal.inicializado = 0
-                    elif varUsadaLocal is not None:
-                        varUsadaLocal.usado = 0
-                        varLocal.inicializado = 0
-                    print('-----ERROR SEMANTICO: Incompatibilidad con los datos-----')
-        self.tablasimbolos.controlarVarUsadas()
-
-    
+            variableUsadaGlobal = self.tablasimbolos.buscarGlobal(i)
+            variableUsadaLocal = self.tablasimbolos.buscarLocal(i)
+            if variableUsadaLocal is not None:
+                if variableUsadaLocal.inicializado == 1:
+                    variableUsadaLocal.usado = 1
+                else:
+                    print('-----ERROR SEMANTICO: La variable '+ i + ' no esta inicializada-----')
+            elif variableUsadaGlobal is not None:
+                if variableUsadaGlobal.inicializado == 1:        
+                    variableUsadaGlobal.usado = 1
+                else:
+                    print('-----ERROR SEMANTICO: La variable '+ i + ' no esta inicializada-----')
+        #Falta encontrar incompatibilidad de datos
+     
     #PROTOTIPO FUNCION
 
     def enterPrototipofunc(self, ctx: compiladoresParser.PrototipofuncContext):
@@ -269,7 +242,8 @@ class Escucha (compiladoresListener) :
 
         if self.tablasimbolos.buscarGlobal(ctx.ID().getText()):
             print('La funcion '+ ctx.ID().getText() +' ya esta declarada')
-            self.tablasimbolos.addIdentificador(nombre, tipoDatoRetorno)
+            
+        self.tablasimbolos.addIdentificador(nombre, tipoDatoRetorno)
 
         #parametros:
 
