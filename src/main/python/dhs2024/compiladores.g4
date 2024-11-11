@@ -106,16 +106,17 @@ asignacion : ID ASIG opal
            | ID ASIG llamadaFunc
            ;
 
-llamadaFunc : ID PA listaExp PC ; 
-listaExp : opal lista_parametros;
-lista_parametros : COMA opal lista_parametros;
-
-
+llamadaFunc : ID PA listaExp PC 
+            ; 
+listaExp : opal (COMA opal)*
+         ;
 
 opal : exp 
      | exp operador exp
+     | CARACTER
      ;
 
+CARACTER : '\'' [a-zA-Z0-9] '\'' ;
 
 exp : term e ;
 
@@ -138,7 +139,7 @@ factor : NUMERO
        | PA exp PC
        ;
 
-iwhile : WHILE PA opal PC bloque
+iwhile : WHILE PA opal PC (bloque | instruccion)
        ;
 
 ifor : FOR PA init PYC opal PYC iteracion PC bloque;
@@ -149,8 +150,8 @@ iteracion: asignacion
          | decremento
          ;
 
-iif :  IF PA opal PC bloque
-    |  IF PA opal PC bloque else
+iif :  IF PA opal PC (bloque | instruccion)
+    |  IF PA opal PC (bloque | instruccion) else
     ;
 
 else : ELSE bloque

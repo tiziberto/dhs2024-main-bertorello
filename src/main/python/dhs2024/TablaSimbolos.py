@@ -25,7 +25,17 @@ class TablaSimbolos(object):
         id=ID(nombre,tipodeDato,True,False,False)
         contexto.tabla.update({nombre:id})
 
-
+    def verificarTiposDatos(self, tipo_var, tipo_asignado):
+        tipo_var = tipo_var.name.lower()
+        if tipo_var == tipo_asignado:
+            return True
+        elif tipo_var == 'float' and tipo_asignado == 'int': return True
+        elif tipo_var == 'int' and tipo_asignado == 'float': return True
+        #elif tipo_var == 'bool' and tipo_asignado == 'int': return True
+        #elif tipo_var == 'int' and tipo_asignado == 'bool': return True
+        #elif tipo_var == 'bool' and tipo_asignado == 'float': return True
+        #elif tipo_var == 'float' and tipo_asignado == 'bool': return True
+        else: return False
 
     def buscarLocal(self, nombre):
         #print("PRUEBA BUSCAR LOCAL")

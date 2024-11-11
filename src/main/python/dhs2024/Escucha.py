@@ -121,10 +121,6 @@ class Escucha (compiladoresListener) :
     
     #VARIABLES:
 
-    def enterDeclaracion(self, ctx:compiladoresParser.DeclaracionContext):
-        print("Inicializacion de una variable")
-        return super().enterDeclaracion(ctx)
-    
     def exitDeclaracion (self, ctx: compiladoresParser.DeclaracionContext):
         tipoDato = ctx.getChild(0).getText()
         nombre = ctx.getChild(1).getText()
@@ -200,7 +196,6 @@ class Escucha (compiladoresListener) :
         else:
             print('-----ERROR SEMANTICO: La variable '+ nombreVar + ' no fue declarada-----')
 
-
         VariableUsada = ctx.getChild(2).getText()
         partes = re.split("[+\-*]",VariableUsada)
         for i in partes:
@@ -216,7 +211,35 @@ class Escucha (compiladoresListener) :
                     variableUsadaGlobal.usado = 1
                 else:
                     print('-----ERROR SEMANTICO: La variable '+ i + ' no esta inicializada-----')
-        #Falta encontrar incompatibilidad de datos
+       
+        #Incompatibilidad de datos
+        valor_asignado = ctx.opal().getText()
+        variable_info = self.tablasimbolos.buscarGlobal(nombreVar)
+        if variable_info is None:
+            variable_info = self.tablasimbolos.buscarLocal(nombreVar)
+        if variable_info:
+            tipo_var = variable_info.tipoDato
+            print(tipo_var)
+            tipo_asignado = self.inferirTipo(valor_asignado)
+            print("tipo asignado: " +tipo_asignado)
+            if not self.tablasimbolos.verificarTiposDatos(tipo_var, tipo_asignado):
+                print('-----ERROR SEMANTICO: Incompatibilidad de tipos-----')
+        else:
+            print('-----ERROR SEMANTICO: La variable no existe-----')
+
+    def inferirTipo(self, expresion):
+        if expresion.isdigit():
+            return 'int'
+        elif expresion.replace('.','', 1).isdigit():
+            return 'float'
+        elif expresion.startswith("'") and expresion.endswith("'"):
+            return 'char'
+        else:
+            #variable_info = self.tablasimbolos.buscarGlobal(expresion)
+            #if  variable_info:
+            #    return variable_info.tipo
+            #else:
+                return 'unknown'
      
     #PROTOTIPO FUNCION
 
@@ -271,10 +294,13 @@ class Escucha (compiladoresListener) :
         nombre = ctx.usoFunc().ID().getText()
         if (self.tablasimbolos.buscarGlobal(nombre)) == 0:
             self.tablasimbolos.addIdentificador(nombre, retorno) #funcion no declarada, se agrega
-
         print ('funcion encontrada: '+nombre+' Tipo de dato: '+retorno)
         print('En la funcion ' + nombre + ' tenemos: ')
         parametros = ctx.usoFunc().parFunc() 
-        numHijos = parametros.getChildCount()
-        i = 0
-        print(f'Número de hijos en "parametros": {numHijos}')
+        if (parametros):
+            numHijos = parametros.getChildCount()
+            print(f'Número de hijos en "parametros": {numHijos}')
+        else: print ('La funcion' + nombre + ' no tiene parametros')
+
+
+            
